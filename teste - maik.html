@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/71bf9fe135.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <title>Desafio maikel</title>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-biohazard" style="color: #ff3b00;font-size: 20px;"></i>
+            Desafios ANOREG-CE
+        </a>
+        </div>
+    </nav>
+    <div class="container">
+        <br>
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Bem vindo!</h4>
+            <p>Todos os desafios foram feitos com o intuito de entretenimento, focando resolver questões da internet.</p>
+            <hr>
+            <p class="mb-0">Caso deseje acessar mais do repositorio clique aqui <a href="https://github.com/Gustavo62">AQUI</a>.</p>
+        </div> 
+        <div class="card" style="width: 100%;">
+            <div class="card-body">
+              <h5 class="card-title">Conta palavras</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Desafio N:1</h6>
+              <p class="card-text">Crie uma função que receba uma string e retorne um Hash com a quantidade de ocorrências de cada palavra.<BR>
+                <b>ATENÇÃO:</b> Não usar a função split, ou outra que automatize o processo de quebra da string em palavras.
+                Exemplo: contaOcorrencias('asa bola casa asa bola asa') teria como saída um hash com a seguinte estrutura:<br>
+                {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'asa':	3,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'bola':	2,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'casa':	1<br>
+                }</p> 
+            </div>
+        </div>
+        <hr>
+        <div class="mb-3">
+            <label for="texto_entrada" class="form-label">Texto de entrada
+            </label>
+            <textarea class="form-control" id="texto_entrada" placeholder="informe aqui o texto"></textarea>
+            <br>
+            <button class="btn btn-success" style="float:right" onclick="validaEntrada()">Analisar</button>
+            <br>
+        </div>
+        <div class="mb-3">
+            <label for="response" class="form-label">Resposta</label>
+            <textarea class="form-control" id="response" rows="3" readonly></textarea>
+        </div>
+    </div>
+    <script> 
+        setTimeout(function(){
+            $('.alert').fadeOut();
+        }, 10000); 
+        let respostaHash        = {}
+        let ultima_paravra      = ""
+        let removeDuplicatas = function(frase){
+            respostaHash        = {}
+            ultima_paravra      = ""
+            let arraySemDuplicatas  = [];
+            let fraseArray          = Array.from(frase);
+            let palavra             = "";
+            let count               = 0;
+            for(a in fraseArray){
+                if (fraseArray[a] != " "){
+                    palavra += fraseArray[a];
+                    if(a == fraseArray.length - 1){
+                        if(arraySemDuplicatas.includes(palavra) == false){  
+                            arraySemDuplicatas[count] = palavra;
+                            ultima_paravra = palavra
+                            palavra = "";
+                            count ++;
+                        }
+                    }
+                }else{ 
+                    if(arraySemDuplicatas.includes(palavra) == false){  
+                        arraySemDuplicatas[count] = palavra;
+                        palavra = "";
+                        count ++;
+                    }else{
+                        palavra = "";
+                    } 
+                } 
+            } 
+            console.log("palavras chave: " + arraySemDuplicatas);
+            return(arraySemDuplicatas);
+        }
+
+        let trataTexto    = function(frase){    
+            let arrayPalavras = removeDuplicatas(frase); 
+            for( a in arrayPalavras){  
+                if(arrayPalavras[a] != ultima_paravra ){ 
+                    let palavra_search  = arrayPalavras[a]+"(?= "+arrayPalavras[a]+"| )";
+                    palavra_search      = RegExp(palavra_search,'g');  
+                    respostaHash[arrayPalavras[a]] ? respostaHash[arrayPalavras[a]] ++ : respostaHash[arrayPalavras[a]] = frase.match(palavra_search).length; 
+                }else{
+                    let palavra_search  = arrayPalavras[a]+"(?! "+arrayPalavras[a]+"| )";
+                    palavra_search      = RegExp(palavra_search,'g');  
+                    respostaHash[arrayPalavras[a]] ? respostaHash[arrayPalavras[a]] ++ : respostaHash[arrayPalavras[a]] = frase.match(palavra_search).length; 
+                }
+            }   
+        } 
+        function validaEntrada(){
+            let texto = document.getElementById("texto_entrada")
+            let response = document.getElementById("response")
+            response.value = null
+            trataTexto(texto.value); 
+            response.value = JSON.stringify(respostaHash);
+        }
+        //console.log("texto: " + texto);
+        //trataTexto(texto);
+    </script>
+</body>
+</html>
