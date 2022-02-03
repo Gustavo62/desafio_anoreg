@@ -111,7 +111,7 @@
             let texto = document.getElementById("texto_entrada")
             let response = document.getElementById("response")
             response.value = null
-            trataTexto(texto.value); 
+            trataTexto(texto.value.trim()+" "); 
             response.value = JSON.stringify(respostaHash);
         }
         //console.log("texto: " + texto);
